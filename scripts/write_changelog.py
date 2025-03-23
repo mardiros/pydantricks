@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 import datetime
 
-import tursu
+import pydantricks
 
 header = (
-    f"## {tursu.__version__} - "
+    f"## {pydantricks.__version__} - "
     f"Released on {datetime.datetime.now().date().isoformat()}"
 )
 with open("CHANGELOG.md.new", "w") as changelog:
