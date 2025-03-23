@@ -39,13 +39,13 @@ class GenericFakerFieldFactory(Generic[F, K]):
 
     @property
     def field(self) -> Faker:
-        """Generator for simple value."""
+        """Factory for simple types."""
         return self.faker
 
     def choice(
         self, factory: type[F] | UnionType | ModelFactory[T] | str
     ) -> Callable[[], F]:
-        """Generator for cardinality types."""
+        """Factory for composed types such as union, enum, literal and Model factory."""
         if is_literal(factory):
             choices = get_args(factory)
             return lambda: random.choice(choices)
@@ -73,6 +73,7 @@ class GenericFakerFieldFactory(Generic[F, K]):
     def set_factory(
         self, factory: type[F], min: int, max: int | None = None
     ) -> Callable[..., set[F]]:
+        """Factory for the set type."""
         def callback() -> set[F]:
             size = random.randint(min, max or min)
             ret: set[F] = set()
@@ -85,11 +86,13 @@ class GenericFakerFieldFactory(Generic[F, K]):
     def list_factory(
         self, factory: type[F], min: int, max: int | None = None
     ) -> Callable[..., list[F]]:
+        """Factory for the list type."""
         return lambda: [
             self.choice(factory)() for _ in range(random.randint(min, max or min))
         ]
 
     def tuple_factory(self, *factory: Any) -> Callable[..., tuple[F, ...]]:
+        """Factory for the type type."""
         return lambda: tuple(self.choice(f)() for f in factory)
 
     def dict_factory(
@@ -99,6 +102,7 @@ class GenericFakerFieldFactory(Generic[F, K]):
         min: int,
         max: int,
     ) -> Callable[..., dict[K, F]]:
+        """Factory for the dict type."""
         item_factory = self.tuple_factory(key_factory, value_factory)
         return lambda: dict(self.list_factory(item_factory, min, max)())  # type: ignore
 
