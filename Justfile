@@ -3,7 +3,7 @@ default_unittest_suite := 'tests/unittests'
 default_functest_suite := 'tests/functionals'
 
 install:
-    uv sync --group dev --group playwright --frozen
+    uv sync --group dev --frozen
 
 update:
     uv sync --all-groups

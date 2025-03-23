@@ -590,12 +590,12 @@ docs = [
 
 [package.metadata]
 requires-dist = [
-    { name = "faker", specifier = ">=37.0.2" },
+    { name = "faker", specifier = ">=37.0.0,<38" },
     { name = "furo", marker = "extra == 'docs'", specifier = ">=2024.5.6" },
     { name = "linkify-it-py", marker = "extra == 'docs'", specifier = ">=2.0.3,<3" },
     { name = "myst-parser", marker = "python_full_version >= '3.10' and extra == 'docs'", specifier = ">=4.0.0,<5" },
     { name = "myst-parser", marker = "python_full_version < '3.10' and extra == 'docs'", specifier = ">=3.0.0,<4" },
-    { name = "pydantic", specifier = ">=2.10.6" },
+    { name = "pydantic", specifier = ">=2.5.0,<3" },
     { name = "sphinx", marker = "extra == 'docs'", specifier = ">=7.0.1,<8" },
     { name = "sphinx-autodoc2", marker = "extra == 'docs'", specifier = ">=0.5.0,<1" },
 ]

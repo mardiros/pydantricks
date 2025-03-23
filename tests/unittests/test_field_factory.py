@@ -1,70 +1,16 @@
-import random
-from enum import Enum
 from typing import Any, Literal
 
 import pytest
-from faker import Faker
-from pydantic import BaseModel
 
-from pydantricks import FieldFactory, ModelFactory
-
-
-# we want to predict the randomness.
-# by the way we can't do pure TDD here because we can't predict berore run
-@pytest.fixture(autouse=True)
-def kill_randomness():
-    Faker.seed(0)
-    random.seed(42)
-
-
-class Permission(str, Enum):
-    READ = "read"
-    WRITE = "write"
-    DELETE = "delete"
-    ADMIN = "admin"
-
-
-class Role(BaseModel):
-    name: str
-    permissions: set[Permission]
-
-    def __hash__(self) -> int:
-        return hash(self.name)
-
-
-class User(BaseModel):
-    username: str
-    roles: list[Role]
-
-
-class TShirt(BaseModel):
-    model: str
-    size: Literal["s", "m", "l"]
-
-
-class RoleFactory(ModelFactory[Role]):
-    name = FieldFactory.field.job
-    permissions = FieldFactory.set_factory(Permission, 2)
-
-
-class UserFactory(ModelFactory[User]):
-    username = FieldFactory.field.user_name
-    roles = FieldFactory.list_factory(RoleFactory, 0, 2)
-
-
-class BobFactory(ModelFactory[User]):
-    username = "bob"
-    roles = FieldFactory.list_factory(RoleFactory, 0, 2)
-
-
-class TSmallShirtFactory(ModelFactory[TShirt]):
-    model = FieldFactory.field.company
-    size = "s"
-
-
-class TShirtFactory(ModelFactory[TShirt]):
-    model = FieldFactory.field.company
-    size = FieldFactory.choice(Literal["s", "m", "l"])
+from pydantricks import FieldFactory
+from tests.unittests.fixtures import (
+    Permission,
+    Role,
+    RoleFactory,
+    TShirt,
+    TShirtFactory,
+    TSmallShirtFactory,
+)
 
 
 @pytest.mark.parametrize(
@@ -248,38 +194,3 @@ def test_set_factory(factory: Any, expected_list: Any):
 )
 def test_dict_factory(factory: Any, expected_list: Any):
     assert factory() == expected_list
-
-
-def test_model_example():
-    assert UserFactory() == User(
-        username="achang",
-        roles=[
-            Role(name="Architect", permissions={Permission.READ, Permission.DELETE}),
-            Role(
-                name="Futures trader", permissions={Permission.READ, Permission.WRITE}
-            ),
-        ],
-    )
-
-    assert UserFactory() == User(
-        username="ysullivan",
-        roles=[
-            Role(name="Immunologist", permissions={Permission.ADMIN, Permission.READ}),
-            Role(
-                name="Publishing rights manager",
-                permissions={Permission.READ, Permission.WRITE},
-            ),
-        ],
-    )
-
-
-def test_constant_value():
-    assert TSmallShirtFactory() == TShirt(model="Chang-Fisher", size="s")
-    assert TSmallShirtFactory() == TShirt(model="Sheppard-Tucker", size="s")
-
-    assert BobFactory().username == "bob"
-
-
-def test_choices():
-    assert TShirtFactory() == TShirt(model="Chang-Fisher", size="l")
-    assert TShirtFactory() == TShirt(model="Sheppard-Tucker", size="s")
