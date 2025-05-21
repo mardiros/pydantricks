@@ -43,7 +43,7 @@ class GenericFakerFieldFactory(Generic[F, K]):
         return self.faker
 
     def choice(
-        self, factory: type[F] | UnionType | ModelFactory[T] | str
+        self, factory: type[F] | Callable[..., F] | UnionType | ModelFactory[T] | str
     ) -> Callable[[], F]:
         """Factory for composed types such as union, enum, literal and Model factory."""
         if is_literal(factory):
@@ -74,6 +74,7 @@ class GenericFakerFieldFactory(Generic[F, K]):
         self, factory: type[F], min: int, max: int | None = None
     ) -> Callable[..., set[F]]:
         """Factory for the set type."""
+
         def callback() -> set[F]:
             size = random.randint(min, max or min)
             ret: set[F] = set()
@@ -84,7 +85,7 @@ class GenericFakerFieldFactory(Generic[F, K]):
         return callback
 
     def list_factory(
-        self, factory: type[F], min: int, max: int | None = None
+        self, factory: type[F] | Callable[..., F], min: int, max: int | None = None
     ) -> Callable[..., list[F]]:
         """Factory for the list type."""
         return lambda: [
