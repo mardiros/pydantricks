@@ -1,6 +1,6 @@
 [project]
 name = "pydantricks"
-version = "0.1.0"
+version = "0.1.1"
 description = "Faker for pydantic models."
 authors = [{ name = "Guillaume Gauvrit", email = "guillaume@gauvr.it" }]
 readme = "README.md"
