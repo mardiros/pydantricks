@@ -6,7 +6,9 @@
 :maxdepth: 1
 :caption: API:
 
+introduction
 develop/index
+changelog
 ```
 
 ## Indices and tables
